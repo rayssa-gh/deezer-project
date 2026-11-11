@@ -80,3 +80,35 @@ def get_data(path, **params):
     """
     data_json = get(path, **params) or {}
     return data_json.get("data", [])
+
+
+def load_cache(csv_path: str) -> tuple[set, dict]:
+    """
+    Loads an existing CSV file to create a cache of already downloaded tracks.
+
+    :param csv_path: Path to the CSV file
+    :returns: A tuple with the set of seen (track, genre) pairs and the tracks dictionary cache
+    """
+    seen_pairs = set()
+    track_cache = {}
+
+    if not os.path.exists(csv_path):
+        return seen_pairs, track_cache
+
+    print(f"Loading existing data from {csv_path} for caching...")
+    df_existing = pd.read_csv(csv_path)
+
+    if df_existing.empty or "track_id" not in df_existing.columns:
+        return seen_pairs, track_cache
+
+    seen_pairs = set(zip(df_existing["track_id"], df_existing["genre"]))
+
+    for _, row in df_existing.iterrows():
+        t_id = row["track_id"]
+        if t_id not in track_cache:
+            track_cache[t_id] = row.to_dict()
+
+    print(f"Cache loaded: {len(seen_pairs)} unique (track, genre) pairs found.")
+    print(f"Track details cache: {len(track_cache)} unique tracks found.")
+
+    return seen_pairs, track_cache

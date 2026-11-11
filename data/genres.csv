@@ -1,13 +1,6 @@
 genre_id,genre_name
-2,Musique africaine
-12,Musique arabe
-16,Musique asiatique
-52,Chanson française
-75,Musique brésilienne
-81,Musique indienne
 84,Country
 85,Alternative
-95,Jeunesse
 98,Classique
 106,Electro
 113,Dance
@@ -19,8 +12,5 @@ genre_id,genre_name
 153,Blues
 165,R&B
 169,Soul & Funk
-173,Films/Jeux vidéo
-197,Latino
-457,Livres audio
 464,Metal
 466,Folk
