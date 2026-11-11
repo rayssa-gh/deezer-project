@@ -22,7 +22,7 @@ def read_csv(path: str) -> pd.DataFrame:
     :param path: Path to the CSV file
     :returns: pd.DataFrame containing the file data
     """
-    print(f"Loading from cache: {path}")
+    print(f"Loading from cache: {path}\n")
     return pd.read_csv(path)
 
 
@@ -38,7 +38,7 @@ def write_csv(df: pd.DataFrame, path: str) -> None:
         os.makedirs(directory, exist_ok=True)
 
     df.to_csv(path, index=False)
-    print(f"File created and saved: {path}")
+    print(f"File created and saved: {path}\n")
 
 
 def get(path, **params):
@@ -95,7 +95,7 @@ def load_cache(csv_path: str) -> tuple[set, dict]:
     if not os.path.exists(csv_path):
         return seen_pairs, track_cache
 
-    print(f"Loading existing data from {csv_path} for caching...")
+    print(f"Loading existing data from {csv_path} for caching...\n")
     df_existing = pd.read_csv(csv_path)
 
     if df_existing.empty or "track_id" not in df_existing.columns:
@@ -109,6 +109,6 @@ def load_cache(csv_path: str) -> tuple[set, dict]:
             track_cache[t_id] = row.to_dict()
 
     print(f"Cache loaded: {len(seen_pairs)} unique (track, genre) pairs found.")
-    print(f"Track details cache: {len(track_cache)} unique tracks found.")
+    print(f"Track details cache: {len(track_cache)} unique tracks found.\n")
 
     return seen_pairs, track_cache

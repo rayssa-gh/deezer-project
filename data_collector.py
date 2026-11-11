@@ -15,7 +15,7 @@ def get_genres_df() -> pd.DataFrame:
 
     :returns: DataFrame with valid genre IDs and names
     """
-    print("Fetching and filtering genres from Deezer API...")
+    print("Fetching and filtering genres from Deezer API..\n")
     rows = [
         {"genre_id": g["id"], "genre_name": g["name"]}
         for g in get_data("genre")
@@ -46,7 +46,7 @@ def get_tracks_df(
     for _, genre_row in genres_df.iterrows():
         genre_id = genre_row["genre_id"]
         genre_name = genre_row["genre_name"]
-        print(f"\n--- Processing genre: {genre_name} (ID: {genre_id}) ---")
+        print(f"--- Processing genre: {genre_name} (ID: {genre_id}) ---\n")
 
         chart_tracks_data = get_data(f"chart/{genre_id}/tracks", limit=100)
         genre_rows = []
@@ -58,8 +58,6 @@ def get_tracks_df(
                 continue
 
             pair = (track_id, genre_name)
-
-            print(pair)
 
             if pair in seen_track_genre_pairs:
                 continue
@@ -96,7 +94,8 @@ def get_tracks_df(
 
             write_csv(df_combined, csv_path)
             print(
-                f"{len(genre_rows)} new rows added for '{genre_name}' (Total in CSV: {len(df_combined)})"
+                f"{len(genre_rows)} new rows added for\
+                  '{genre_name}' (Total in CSV: {len(df_combined)})\n"
             )
 
     return (
@@ -110,7 +109,8 @@ def build_chart_track_record(
     track: dict, album_details: dict, artist_details: dict, genre_name: str
 ) -> dict:
     """
-    Creates a clean dictionary for a track with zero None values using track, album, and artist data.
+    Creates a clean dictionary for a track with zero None values using track,
+    album, and artist data.
 
     :param track: Raw track data dictionary from API
     :param album_details: Detailed album data dictionary from API

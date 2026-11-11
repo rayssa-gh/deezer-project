@@ -22,24 +22,23 @@ pip install -r requirements.txt
 python main.py
 ```
 
-Le script crée deux fichiers dans `data/` : `genres.csv` et `tracks.csv`.
-La collecte prend quelques minutes, car une pause est faite entre les appels pour
-respecter le quota de l'API (50 appels / 5 s).
+Le script crée un dossier `data/` contenant `genres.csv` et `tracks.csv`, ainsi qu'un dossier `figures/` regroupant tous les graphiques d'analyse.
+La collecte prend quelques minutes, car une pause est faite entre les appels pour respecter le quota de l'API (50 appels / 5 s).
 
-Elle est **reprenable** : si elle est interrompue, relancer la commande reprend où elle
-s'était arrêtée, sans redemander les titres déjà collectés. Pour repartir de zéro,
-supprimer le dossier `data/`.
+Elle est **reprenable** : si elle est interrompue, relancer la commande reprend où elle s'était arrêtée, sans redemander les titres déjà collectés. Pour repartir de zéro, supprimer le dossier `data/`.
 
 ## Structure du projet
 
-```
+```text
 .
 ├── main.py             # point d'entrée
 ├── config.py           # constantes (URL, chemins, colonnes, genres exclus...)
 ├── data_collector.py   # collecte : genres, classements, détails album et artiste
+├── data_analyser.py    # analyse
 ├── utils.py            # outils : appels API, lecture/écriture CSV, cache
 ├── requirements.txt
-└── data/               # CSV générés
+├── data/               # CSV générés (genres.csv, tracks.csv)
+└── figures/            # Graphiques et visualisations générés
 ```
 
 ## Partie 1 : stratégie de collecte
@@ -84,4 +83,22 @@ Les titres sont collectés via les **classements par genre** de l'API Deezer
 
 ## Partie 2 : analyse
 
-À venir.
+Cette partie présente les résultats statistiques et visuels tirés de l'échantillon collecté.
+
+### 1. Lien entre popularité, rang et fanbase
+- **Matrice de corrélation** : L'analyse des liens entre les variables numériques (via la matrice de Spearman) montre une corrélation modérée entre le nombre de fans de l'artiste et le rang des pistes.
+- **ANOVA sur la durée** : Un test statistique a été réalisé pour comparer la durée des morceaux selon les genres. Le résultat confirme des différences hautement significatives ($F = 11,29$, p-value = $7,80 \times 10^{-25}$).
+
+![Matrice de Corrélation](figures/correlation_heatmap.png)
+
+### 2. Comparaison de la durée par genre
+- Étant donné que le BPM n'est pas toujours renseigné (beaucoup de valeurs à 0), cette métrique a été écartée au profit de la **durée**.
+- Tous les genres étant représentés de manière équitable (top 100 récupéré par genre), les boîtes à moustaches triées par ordre croissant de durée montrent clairement que certains genres privilégient les formats courts (comme le Rap/Hip-Hop) tandis que d'autres acceptent des formats plus longs (comme le Rock).
+
+![Distribution de la Durée par Genre](figures/boxplot_duration_by_genre.png)
+
+### 3. Les musiques populaires sont-elles plutôt récentes ou anciennes selon le genre ?
+- **Question posée** : *Est-ce que selon le genre musical, les gens écoutent plutôt des tracks anciens ou récents dans les charts ?*
+- En analysant la proportion des tranches d'années par genre (grâce au graphique en barres empilées), on observe de vraies disparités : certains genres comme le Rap/Hip-Hop sont dominés par les sorties très récentes (2021-2026), tandis que d'autres genres (comme le Rock ou le Jazz) intègrent une part beaucoup plus importante de classiques plus anciens dans leurs classements.
+
+![Répartition des Tranches d'Années par Genre](figures/genre_release_year_stacked_bar.png)
